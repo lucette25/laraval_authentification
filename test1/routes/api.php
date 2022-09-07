@@ -12,7 +12,7 @@ use App\Http\Controllers\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-/*Route::group([
+Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function ($router) {
@@ -21,9 +21,9 @@ use App\Http\Controllers\AuthController;
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);    
-});*/
+});
 //Route::Resource("users", UserController::class); // routes "users.*" of API
-Route::group([
+/*Route::group([
 
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -35,4 +35,4 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 
-});
+});*/

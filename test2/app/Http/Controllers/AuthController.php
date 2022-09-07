@@ -45,13 +45,23 @@ class AuthController extends Controller
 
     public function register(Request $request){
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'first_name' => 'required|max:100',
+            'last_name' => 'max:100',
+            'type' => 'required|max:1',
+            'city' => 'max:1000',
+            'state' => 'max:1000',//quartier
+            'postal_code' => 'max:1000',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'type' => $request->type,
+            'city' => $request->city,
+            'state' => $request->state,
+            'postal_code' => $request->postal_code,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -76,7 +86,10 @@ class AuthController extends Controller
             'message' => 'Successfully logged out',
         ]);
     }
-
+/*
+ the me method returns the user profile or 
+ in this case the user object
+*/
     public function me()
     {
         return response()->json([
@@ -96,5 +109,4 @@ class AuthController extends Controller
             ]
         ]);
     }
-
 }
