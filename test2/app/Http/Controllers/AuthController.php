@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Http\Controllers\Controller;
+
+use App\Http\Requests\UserRequest;
 
 class AuthController extends Controller
 {
@@ -109,4 +112,95 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+    ///////////////////////////////////////////////////////////
+    public function index()
+    {
+
+        // get all users
+        if(Auth::user()->type=='A'){
+            $users = User::all();
+        }else{
+            $users = User::all()->where('type', 'B');
+        }
+        //$users = User::all();
+        //return json data on json format
+        return response()->json($users);    
+        
+    }
+
+        public function show( $id)
+        {
+            $user = User::all()->where('id', $id)->first();
+            
+            // On retourne les informations de l'utilisateur en JSON
+         if (is_null($user)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'user not found.',
+            
+            ]);
+            }
+
+        return response()->json($user);
+        }
+
+    
+
+public function update(Request $request, User $user)
+    {
+        //if( Auth::user()!=$user && ())
+           // return "yes";
+
+          // La validation de données
+    $this->validate($request, [
+        'first_name' => 'max:100',
+        'last_name' => 'max:100',
+        'type' => 'max:1',
+        'city' => 'max:1000',
+        'state' => 'max:1000',//quartier
+        'postal_code' => 'max:1000',
+        'email' => 'email|unique:users',
+        'password' => 'min:8'
+    ]);
+
+    // change user information
+    $user->update([
+        'first_name' => $request->first_name? $request->first_name  : $user->first_name,
+        'last_name' => $request->last_name ? $request->last_name  : $user->last_name,
+        'type' => $request->type ? $request->type  : $user->type,
+        'city' => $request->city ? $request->city  : $user->city,
+        'state' => $request->state ? $request->state  : $user->state,
+        'postal_code' => $request->postal_code ? $request->postal_code  : $user->postal_code,
+        'email' => $request->email ? $request->email  : $user->email,
+        'password' => Hash::make($user->password),
+    ]);
+
+    // On retourne la réponse JSON
+    return response()->json([
+        'status' => 'success',
+        'message' => 'User updated successfully',
+        'user' => $user,
+        
+    ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        // On supprime l'utilisateur
+    $user->delete();
+
+    // On retourne la réponse JSON
+    return response()->json([
+        'status' => 'success',
+        'message' => 'User delated successfully'
+        
+    ]);    }
+
 }

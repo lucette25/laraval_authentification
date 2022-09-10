@@ -10,5 +10,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
     Route::get('me', 'me');
+    //Route::get('users', 'index');
+
 
 });
+Route::apiResource("users", AuthController::class); // routes "users.*" of API
